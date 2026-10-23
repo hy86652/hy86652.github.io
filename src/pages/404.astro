@@ -1,0 +1,21 @@
+---
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import Link from "@components/Link.astro";
+import { t } from "@i18n/ui";
+---
+
+<PageLayout title="404" description={t("en", "notFound.text")} lang="en" translationPath={null} fallbackPath="/zh/">
+  <Container>
+    <div class="space-y-10">
+      <div class="animate space-y-2">
+        <div class="font-semibold text-black dark:text-white">404 · {t("en", "notFound.title")}</div>
+        <p>{t("en", "notFound.text")} <Link href="/en/">{t("en", "notFound.home")}</Link></p>
+      </div>
+      <div class="animate space-y-2" lang="zh-CN">
+        <div class="font-semibold text-black dark:text-white">{t("zh", "notFound.title")}</div>
+        <p>{t("zh", "notFound.text")} <Link href="/zh/">{t("zh", "notFound.home")}</Link></p>
+      </div>
+    </div>
+  </Container>
+</PageLayout>

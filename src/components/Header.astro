@@ -1,0 +1,52 @@
+---
+import Container from "@components/Container.astro";
+import Link from "@components/Link.astro";
+import { SITE } from "@consts";
+import { LANG_SWITCH_LABEL, otherLang, t, type Lang } from "@i18n/ui";
+
+type Props = {
+  lang: Lang;
+  // Where the language switch goes: the translated page, or the other language's section index
+  switchPath: string;
+};
+
+const { lang, switchPath } = Astro.props;
+const other = otherLang(lang);
+const nav = [
+  { href: `/${lang}/blog/`, label: t(lang, "nav.blog") },
+  { href: `/${lang}/notes/`, label: t(lang, "nav.notes") },
+  { href: `/${lang}/work/`, label: t(lang, "nav.work") },
+  { href: `/${lang}/projects/`, label: t(lang, "nav.projects") },
+];
+---
+
+<header>
+  <Container>
+    <div class="flex flex-wrap gap-x-4 gap-y-2 justify-between">
+      <Link href={`/${lang}/`} underline={false}>
+        <div class="font-semibold">
+          {SITE.NAME}
+        </div>
+      </Link>
+      <nav class="flex flex-wrap items-center gap-1">
+        {nav.map((item, index) => (
+          <Fragment>
+            {index > 0 && <span>/</span>}
+            <Link href={item.href}>{item.label}</Link>
+          </Fragment>
+        ))}
+        <span class="mx-2 h-4 w-px bg-black/15 dark:bg-white/20" aria-hidden="true"></span>
+        <Link
+          href={switchPath}
+          underline={false}
+          hreflang={other}
+          lang={other}
+          data-lang-switch={other}
+          aria-label={other === "zh" ? "切换到中文" : "Switch to English"}
+        >
+          {LANG_SWITCH_LABEL[other]}
+        </Link>
+      </nav>
+    </div>
+  </Container>
+</header>

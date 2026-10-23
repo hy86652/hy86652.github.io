@@ -1,0 +1,15 @@
+---
+import { formatDate } from "@lib/utils";
+import type { Lang } from "@i18n/ui";
+
+interface Props {
+  date: Date;
+  lang: Lang;
+}
+
+const { date, lang } = Astro.props;
+---
+
+<time datetime={date.toISOString()}>
+  {formatDate(date, lang)}
+</time>

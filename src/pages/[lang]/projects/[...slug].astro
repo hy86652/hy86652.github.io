@@ -1,0 +1,10 @@
+---
+import EntryView from "@views/EntryView.astro";
+import { getEntryPaths } from "@i18n/content";
+
+export async function getStaticPaths() {
+  return getEntryPaths("projects");
+}
+---
+
+<EntryView entry={Astro.props.entry} />

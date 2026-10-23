@@ -1,0 +1,80 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import PageLayout from "@layouts/PageLayout.astro";
+import Container from "@components/Container.astro";
+import FormattedDate from "@components/FormattedDate.astro";
+import BackToPrev from "@components/BackToPrev.astro";
+import Link from "@components/Link.astro";
+import Prose from "@components/Prose.astro";
+import { readingTime } from "@lib/utils";
+import { otherLang, t } from "@i18n/ui";
+import { entryPath, splitId, type PostCollection } from "@i18n/content";
+
+type Props = {
+  entry: CollectionEntry<PostCollection>;
+};
+
+const { entry } = Astro.props;
+const { lang, slug } = splitId(entry.id);
+const collection = entry.collection;
+const { Content } = await render(entry);
+
+// getEntry() would log a warning for every untranslated entry, so search the collection instead
+const translationId = `${otherLang(lang)}/${slug}`;
+const translation = ((await getCollection(collection)) as CollectionEntry<PostCollection>[]).find(
+  (other) => other.id === translationId,
+);
+const translationPath = translation && !translation.data.draft ? entryPath(translation) : null;
+
+const links = entry.collection === "projects"
+  ? [
+      entry.data.demoURL && { href: entry.data.demoURL, label: "demo" },
+      entry.data.repoURL && { href: entry.data.repoURL, label: "repo" },
+    ].filter((link): link is { href: string; label: string } => Boolean(link))
+  : [];
+---
+
+<PageLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  lang={lang}
+  translationPath={translationPath}
+  fallbackPath={`/${otherLang(lang)}/${collection}/`}
+>
+  <Container>
+    <div class="animate">
+      <BackToPrev href={`/${lang}/${collection}/`}>
+        {t(lang, `post.backTo.${collection}`)}
+      </BackToPrev>
+    </div>
+    <div class="space-y-1 my-10">
+      <div class="animate flex flex-wrap items-center gap-1.5 text-sm">
+        <FormattedDate date={entry.data.date} lang={lang} />
+        <span>&bull;</span>
+        <span>{readingTime(entry.body ?? "")} {t(lang, "post.minRead")}</span>
+        {entry.data.tags?.map((tag) => (
+          <span class="rounded border border-black/15 dark:border-white/20 px-1.5 py-px text-xs">{tag}</span>
+        ))}
+      </div>
+      <h1 class="animate text-2xl font-semibold text-black dark:text-white">
+        {entry.data.title}
+      </h1>
+      {links.length > 0 && (
+        <nav class="animate flex gap-1">
+          {links.map((link, index) => (
+            <Fragment>
+              {index > 0 && <span>/</span>}
+              <Link href={link.href} external>{link.label}</Link>
+            </Fragment>
+          ))}
+        </nav>
+      )}
+      {!translationPath && (
+        <p class="animate text-sm italic opacity-75">{t(lang, "post.untranslated")}</p>
+      )}
+    </div>
+    <Prose lang={lang} class="animate">
+      <Content />
+    </Prose>
+  </Container>
+</PageLayout>

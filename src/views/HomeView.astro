@@ -1,0 +1,119 @@
+---
+import Container from "@components/Container.astro";
+import PageLayout from "@layouts/PageLayout.astro";
+import ArrowCard from "@components/ArrowCard.astro";
+import Link from "@components/Link.astro";
+import Intro from "@components/Intro.astro";
+import WorkList from "@components/WorkList.astro";
+import { SITE, SOCIALS } from "@consts";
+import { t, type Lang, type UIKey } from "@i18n/ui";
+import { getPosts, getWork } from "@i18n/content";
+
+type Props = {
+  lang: Lang;
+};
+
+const { lang } = Astro.props;
+
+const sections = [
+  {
+    entries: (await getPosts("blog", lang)).slice(0, SITE.NUM_POSTS_ON_HOMEPAGE),
+    heading: "home.latestPosts",
+    more: "home.allPosts",
+    href: `/${lang}/blog/`,
+  },
+  {
+    entries: (await getPosts("notes", lang)).slice(0, SITE.NUM_NOTES_ON_HOMEPAGE),
+    heading: "home.latestNotes",
+    more: "home.allNotes",
+    href: `/${lang}/notes/`,
+  },
+] satisfies { entries: unknown[]; heading: UIKey; more: UIKey; href: string }[];
+
+const work = (await getWork(lang)).slice(0, SITE.NUM_WORKS_ON_HOMEPAGE);
+const projects = (await getPosts("projects", lang)).slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
+---
+
+<PageLayout title={t(lang, "home.title")} description={t(lang, "home.description")} lang={lang}>
+  <Container>
+    <div class="space-y-16">
+      <section>
+        <Intro lang={lang} />
+      </section>
+
+      {sections.filter((section) => section.entries.length > 0).map((section) => (
+        <section class="animate space-y-6">
+          <div class="flex flex-wrap gap-y-2 items-center justify-between">
+            <h5 class="font-semibold text-black dark:text-white">
+              {t(lang, section.heading)}
+            </h5>
+            <Link href={section.href}>
+              {t(lang, section.more)}
+            </Link>
+          </div>
+          <ul class="flex flex-col gap-4">
+            {section.entries.map((entry) => (
+              <li>
+                <ArrowCard entry={entry} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">
+            {t(lang, "home.work")}
+          </h5>
+          <Link href={`/${lang}/work/`}>
+            {t(lang, "home.allWork")}
+          </Link>
+        </div>
+        <WorkList entries={work} lang={lang} />
+      </section>
+
+      <section class="animate space-y-6">
+        <div class="flex flex-wrap gap-y-2 items-center justify-between">
+          <h5 class="font-semibold text-black dark:text-white">
+            {t(lang, "home.projects")}
+          </h5>
+          <Link href={`/${lang}/projects/`}>
+            {t(lang, "home.allProjects")}
+          </Link>
+        </div>
+        <ul class="flex flex-col gap-4">
+          {projects.map((project) => (
+            <li>
+              <ArrowCard entry={project} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section class="animate space-y-4">
+        <h5 class="font-semibold text-black dark:text-white">
+          {t(lang, "home.connect")}
+        </h5>
+        <article>
+          <p>{t(lang, "home.connectText")}</p>
+        </article>
+        <ul class="flex flex-wrap gap-2">
+          {SOCIALS.map((social) => (
+            <li class="flex gap-x-2 text-nowrap">
+              <Link href={social.HREF} external aria-label={`${SITE.NAME} on ${social.NAME}`}>
+                {social.NAME}
+              </Link>
+              <span>/</span>
+            </li>
+          ))}
+          <li class="line-clamp-1">
+            <Link href={`mailto:${SITE.EMAIL}`} aria-label={`Email ${SITE.NAME}`}>
+              {SITE.EMAIL}
+            </Link>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </Container>
+</PageLayout>

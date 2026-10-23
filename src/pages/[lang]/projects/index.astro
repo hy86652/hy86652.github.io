@@ -1,0 +1,12 @@
+---
+import ListView from "@views/ListView.astro";
+import { LANGS, type Lang } from "@i18n/ui";
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+---
+
+<ListView collection="projects" lang={lang} />

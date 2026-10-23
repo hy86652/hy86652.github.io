@@ -1,0 +1,39 @@
+---
+import Head from "@components/Head.astro";
+import Header from "@components/Header.astro";
+import Footer from "@components/Footer.astro";
+import { SITE } from "@consts";
+import { LOCALES, otherLang, type Lang } from "@i18n/ui";
+import { swapLangPath } from "@i18n/content";
+
+type Props = {
+  title: string;
+  description: string;
+  lang: Lang;
+  // The same page in the other language. Defaults to swapping the language prefix;
+  // pass null when no translation exists, together with a fallbackPath for the language switch.
+  translationPath?: string | null;
+  fallbackPath?: string;
+};
+
+const { title, description, lang, fallbackPath } = Astro.props;
+const translationPath =
+  Astro.props.translationPath === undefined
+    ? swapLangPath(Astro.url.pathname, otherLang(lang))
+    : Astro.props.translationPath ?? undefined;
+const switchPath = translationPath ?? fallbackPath ?? `/${otherLang(lang)}/`;
+---
+
+<!doctype html>
+<html lang={LOCALES[lang]}>
+  <head>
+    <Head title={`${title} | ${SITE.NAME}`} description={description} lang={lang} translationPath={translationPath} />
+  </head>
+  <body>
+    <Header lang={lang} switchPath={switchPath} />
+    <main>
+      <slot />
+    </main>
+    <Footer lang={lang} />
+  </body>
+</html>
