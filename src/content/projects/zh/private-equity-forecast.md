@@ -3,7 +3,6 @@ title: "私募股权预测分析"
 description: "交易预测越准，退出就越成功吗？为 The Riverside Company 做的毕业项目。"
 date: "2025-12-15"
 tags: ["Python","Statistics","Finance"]
-repoURL: "https://github.com/hy86652/Private-Equity-Forecast-Quantitative-Analysis"
 ---
 
 这是康奈尔与 The Riverside Company 合作的毕业项目，我带领一个 7 人团队完成。

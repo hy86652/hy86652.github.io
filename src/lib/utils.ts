@@ -15,7 +15,7 @@ export function formatDate(date: Date, lang: Lang) {
   }).format(date);
 }
 
-function formatMonth(date: Date, lang: Lang) {
+export function formatMonth(date: Date, lang: Lang) {
   return Intl.DateTimeFormat(LOCALES[lang], {
     month: "short",
     year: "numeric",

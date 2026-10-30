@@ -3,7 +3,6 @@ title: "Private Equity Forecast Analysis"
 description: "Do accurate deal projections predict a successful exit? A capstone for The Riverside Company."
 date: "2025-12-15"
 tags: ["Python","Statistics","Finance"]
-repoURL: "https://github.com/hy86652/Private-Equity-Forecast-Quantitative-Analysis"
 ---
 
 A Cornell capstone engagement with The Riverside Company, where I led a team of seven.

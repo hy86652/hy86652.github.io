@@ -4,10 +4,10 @@ import PageLayout from "@layouts/PageLayout.astro";
 import ArrowCard from "@components/ArrowCard.astro";
 import Link from "@components/Link.astro";
 import Intro from "@components/Intro.astro";
-import WorkList from "@components/WorkList.astro";
+import Timeline from "@components/Timeline.astro";
 import { SITE, SOCIALS } from "@consts";
 import { t, type Lang, type UIKey } from "@i18n/ui";
-import { getPosts, getWork } from "@i18n/content";
+import { getPosts, getTimeline } from "@i18n/content";
 
 type Props = {
   lang: Lang;
@@ -30,7 +30,7 @@ const sections = [
   },
 ] satisfies { entries: unknown[]; heading: UIKey; more: UIKey; href: string }[];
 
-const work = (await getWork(lang)).slice(0, SITE.NUM_WORKS_ON_HOMEPAGE);
+const work = (await getTimeline("work", lang)).slice(0, SITE.NUM_WORKS_ON_HOMEPAGE);
 const projects = (await getPosts("projects", lang)).slice(0, SITE.NUM_PROJECTS_ON_HOMEPAGE);
 ---
 
@@ -70,7 +70,7 @@ const projects = (await getPosts("projects", lang)).slice(0, SITE.NUM_PROJECTS_O
             {t(lang, "home.allWork")}
           </Link>
         </div>
-        <WorkList entries={work} lang={lang} />
+        <Timeline entries={work} lang={lang} />
       </section>
 
       <section class="animate space-y-6">

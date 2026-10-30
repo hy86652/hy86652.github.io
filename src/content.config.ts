@@ -42,4 +42,31 @@ const work = defineCollection({
   }),
 });
 
-export const collections = { blog, notes, projects, work };
+const education = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/education" }),
+  schema: z.object({
+    school: z.string(),
+    degree: z.string(),
+    dateStart: z.coerce.date(),
+    dateEnd: z.union([z.coerce.date(), z.string()]),
+  }),
+});
+
+// Certifications and awards: one dated item each, with optional details in the body
+const honor = z.object({
+  title: z.string(),
+  issuer: z.string(),
+  date: z.coerce.date(),
+});
+
+const certifications = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/certifications" }),
+  schema: honor,
+});
+
+const awards = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/awards" }),
+  schema: honor,
+});
+
+export const collections = { blog, notes, projects, work, education, certifications, awards };

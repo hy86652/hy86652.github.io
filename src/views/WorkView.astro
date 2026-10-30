@@ -1,16 +1,22 @@
 ---
 import PageLayout from "@layouts/PageLayout.astro";
 import Container from "@components/Container.astro";
-import WorkList from "@components/WorkList.astro";
-import { t, type Lang } from "@i18n/ui";
-import { getWork } from "@i18n/content";
+import Timeline from "@components/Timeline.astro";
+import { t, type Lang, type UIKey } from "@i18n/ui";
+import { getTimeline } from "@i18n/content";
 
 type Props = {
   lang: Lang;
 };
 
 const { lang } = Astro.props;
-const work = await getWork(lang);
+
+const sections = [
+  { heading: "work.experience", entries: await getTimeline("work", lang) },
+  { heading: "work.education", entries: await getTimeline("education", lang) },
+  { heading: "work.certifications", entries: await getTimeline("certifications", lang) },
+  { heading: "work.awards", entries: await getTimeline("awards", lang) },
+] satisfies { heading: UIKey; entries: unknown[] }[];
 ---
 
 <PageLayout title={t(lang, "work.title")} description={t(lang, "work.description")} lang={lang}>
@@ -22,7 +28,14 @@ const work = await getWork(lang);
         </div>
         <p class="text-sm">{t(lang, "work.description")}</p>
       </div>
-      <WorkList entries={work} lang={lang} animateItems />
+      {sections.filter((section) => section.entries.length > 0).map((section) => (
+        <section class="space-y-4">
+          <h2 class="animate font-semibold text-black dark:text-white">
+            {t(lang, section.heading)}
+          </h2>
+          <Timeline entries={section.entries} lang={lang} animateItems />
+        </section>
+      ))}
     </div>
   </Container>
 </PageLayout>

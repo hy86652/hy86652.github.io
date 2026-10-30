@@ -32,10 +32,18 @@ export async function getEntryPaths(collection: PostCollection) {
     }));
 }
 
-export async function getWork(lang: Lang) {
-  return (await getCollection("work"))
+export type TimelineCollection = "work" | "education" | "certifications" | "awards";
+
+function startDate(entry: CollectionEntry<TimelineCollection>) {
+  return "dateStart" in entry.data ? entry.data.dateStart : entry.data.date;
+}
+
+// Work history, education, and honors in one language, newest first
+export async function getTimeline<C extends TimelineCollection>(collection: C, lang: Lang) {
+  const entries = (await getCollection(collection)) as CollectionEntry<TimelineCollection>[];
+  return entries
     .filter((entry) => splitId(entry.id).lang === lang)
-    .sort((a, b) => b.data.dateStart.valueOf() - a.data.dateStart.valueOf());
+    .sort((a, b) => startDate(b).valueOf() - startDate(a).valueOf()) as CollectionEntry<C>[];
 }
 
 // Path of the same page in another language, e.g. /en/blog/ -> /zh/blog/

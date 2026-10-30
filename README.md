@@ -1,95 +1,125 @@
-# Simon Yan · 个人网站
+# Simon Yan · Personal Website
 
-我的长期职业记录：做了什么、学了什么、想了什么。中英双语。
+A long-running record of my career: what I work on, what I learn, and what I think. Written in English and Chinese.
 
-- 线上地址：https://hy86652.github.io
-- 技术栈：[Astro 7](https://astro.build) + Tailwind CSS 4，基于 [Astro Nano](https://github.com/markhorn-dev/astro-nano) 模板改造
-- 部署：push 到 `main` 后，由 GitHub Actions 自动构建并发布到 GitHub Pages
+- Live site: https://hy86652.github.io
+- Stack: [Astro 7](https://astro.build) + Tailwind CSS 4, adapted from the [Astro Nano](https://github.com/markhorn-dev/astro-nano) template
+- Deployment: every push to `main` is built by GitHub Actions and published to GitHub Pages
 
-## 常用命令
+## Commands
 
-| 命令 | 作用 |
+| Command | What it does |
 | :--- | :--- |
-| `npm install` | 安装依赖（第一次克隆后执行） |
-| `npm run dev` | 本地预览，地址为 http://localhost:4321，修改后自动刷新 |
-| `npm run build` | 类型检查并构建到 `dist/`。push 之前跑一次，能提前发现错误 |
-| `npm run preview` | 预览构建后的网站 |
+| `npm install` | Install dependencies (run once after cloning) |
+| `npm run dev` | Start a local preview at http://localhost:4321 that reloads on change |
+| `npm run build` | Type-check and build to `dist/`. Run it before pushing to catch errors early |
+| `npm run preview` | Preview the built site |
 
-## 写一篇新内容
+## Writing new content
 
-所有内容都在 `src/content/` 下，按**栏目 / 语言**分文件夹：
+All content lives in `src/content/`, organized by **section / language**:
 
 ```
 src/content/
-├── blog/       博客：较长的文章（复盘、思考）
+├── blog/            Blog: longer posts (retrospectives, reflections)
 │   ├── en/
 │   └── zh/
-├── notes/      笔记：简短的学习记录 / TIL
-├── projects/   项目
-└── work/       工作经历
+├── notes/           Notes: short learning records / TIL
+├── projects/        Projects
+├── work/            Work experience
+├── education/       Education
+├── certifications/  Certifications
+└── awards/          Awards
 ```
 
-**中英文版本的文件名必须相同**，例如 `blog/en/my-post.md` 和 `blog/zh/my-post.md`，这样语言切换按钮才能找到对应的译文。如果某篇暂时只有一种语言，页面上会提示"还没有另一语言版本"，切换按钮会回到另一语言的列表页。
+The Work page shows work experience, education, certifications, and awards, in that order.
 
-文件名就是网址：`blog/en/my-post.md` 对应的地址是 `/en/blog/my-post/`。
+**The English and Chinese versions must have the same file name**, e.g. `blog/en/my-post.md` and `blog/zh/my-post.md`, so the language switch can find the translation. If an entry exists in only one language, the page says the other version is not available yet, and the language switch goes to the other language's section index instead.
 
-如果文章需要配图，可以改用文件夹的形式：`blog/en/my-post/index.md`，图片放在同一个文件夹里，用 `![说明](./image.png)` 引用。
+The file name is the URL: `blog/en/my-post.md` is served at `/en/blog/my-post/`.
 
-### 博客 / 笔记 的开头
+If a post needs images, use a folder instead: `blog/en/my-post/index.md`, with the images in the same folder, referenced as `![caption](./image.png)`.
+
+### Blog / note frontmatter
 
 ```markdown
 ---
-title: "标题"
-description: "一句话简介，显示在列表和搜索结果里"
+title: "Title"
+description: "One-line summary, shown in lists and search results"
 date: "2026-10-22"
-tags: ["Python", "learning"]   # 可选
-draft: true                    # 可选，写 true 则不发布
+tags: ["Python", "learning"]   # optional
+draft: true                    # optional; true means it is not published
 ---
 
-正文用 Markdown 写……
+Body text in Markdown...
 ```
 
-### 项目的开头
+### Project frontmatter
 
-和博客一样，另外可以加两个可选字段：
+Same as a blog post, plus two optional fields:
 
 ```markdown
 demoURL: "https://..."
 repoURL: "https://github.com/hy86652/..."
 ```
 
-### 工作经历的开头
+### Work experience frontmatter
 
 ```markdown
 ---
-company: "公司名"
-role: "职位"
+company: "Company name"
+role: "Job title"
 dateStart: "2026-07-01"
-dateEnd: "Present"     # 英文版写 "Present"，中文版写 "至今"；结束后改成日期
+dateEnd: "Present"     # "Present" in English, "至今" in Chinese; replace with a date once it ends
 ---
 
-一段简短描述。
+A short description.
 ```
 
-## 改其他地方
+### Education frontmatter
 
-| 想改的内容 | 文件 |
+```markdown
+---
+school: "School · City"
+degree: "Degree and major"
+dateStart: "2025-08-01"
+dateEnd: "2026-05-31"
+---
+
+GPA, coursework, and other details.
+```
+
+### Certification / award frontmatter
+
+```markdown
+---
+title: "Name of the certification or award"
+issuer: "Who issued it"
+date: "2026-10-01"
+---
+
+Optional details, such as a credential ID or what the award was for.
+```
+
+## Changing other things
+
+| What to change | File |
 | :--- | :--- |
-| 首页的自我介绍 | `src/components/Intro.astro` |
-| 名字、邮箱、社交链接、首页显示的条数 | `src/consts.ts` |
-| 导航、按钮等界面文字（中英） | `src/i18n/ui.ts` |
-| 颜色、字体、全局样式 | `src/styles/global.css` |
+| Homepage introduction | `src/components/Intro.astro` |
+| Name, email, social links, number of items on the homepage | `src/consts.ts` |
+| Navigation, buttons, and other UI text (both languages) | `src/i18n/ui.ts` |
+| Colors, fonts, global styles | `src/styles/global.css` |
 
-## 发布
+## Publishing
 
 ```bash
 git add .
-git commit -m "post: 标题"
+git commit -m "post: title"
 git push
 ```
 
-push 后一两分钟网站就会更新，进度可以在仓库的 **Actions** 页面查看。
+The site updates a minute or two after the push. Progress is visible on the repository's **Actions** page.
 
-## 致谢
+## Credits
 
-模板来自 Mark Horn 的 [Astro Nano](https://github.com/markhorn-dev/astro-nano)，MIT 许可证，见 [LICENSE](LICENSE)。
+Based on [Astro Nano](https://github.com/markhorn-dev/astro-nano) by Mark Horn, MIT License. See [LICENSE](LICENSE).

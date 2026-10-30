@@ -1,0 +1,54 @@
+---
+import { render, type CollectionEntry } from "astro:content";
+import Prose from "@components/Prose.astro";
+import { dateRange, formatMonth } from "@lib/utils";
+import type { Lang } from "@i18n/ui";
+import type { TimelineCollection } from "@i18n/content";
+
+type Props = {
+  entries: CollectionEntry<TimelineCollection>[];
+  lang: Lang;
+  animateItems?: boolean;
+};
+
+const { entries, lang, animateItems = false } = Astro.props;
+
+function describe(entry: CollectionEntry<TimelineCollection>) {
+  switch (entry.collection) {
+    case "work":
+      return { date: dateRange(entry.data.dateStart, entry.data.dateEnd, lang), title: entry.data.company, subtitle: entry.data.role };
+    case "education":
+      return { date: dateRange(entry.data.dateStart, entry.data.dateEnd, lang), title: entry.data.school, subtitle: entry.data.degree };
+    case "certifications":
+    case "awards":
+      return { date: formatMonth(entry.data.date, lang), title: entry.data.title, subtitle: entry.data.issuer };
+  }
+}
+
+const items = await Promise.all(
+  entries.map(async (entry) => ({
+    id: entry.id,
+    ...describe(entry),
+    Content: (await render(entry)).Content,
+  })),
+);
+---
+
+<ul class="flex flex-col space-y-4">
+  {items.map((item) => (
+    <li class:list={[animateItems && "animate"]}>
+      <div class="text-sm opacity-75">
+        {item.date}
+      </div>
+      <div class="font-semibold text-black dark:text-white">
+        {item.title}
+      </div>
+      <div class="text-sm opacity-75">
+        {item.subtitle}
+      </div>
+      <Prose lang={lang}>
+        <item.Content />
+      </Prose>
+    </li>
+  ))}
+</ul>
